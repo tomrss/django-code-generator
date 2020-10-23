@@ -63,7 +63,11 @@ class Template:
             if node.is_dir():
                 os.makedirs(to_path, exist_ok=True)
             else:
+                (root, ext) = os.path.splitext(to_path)
+                if ext != '.tpl':
+                    continue
+                to_path_py_ext = root + '.py'
                 template = engine.get_template(str(node))
                 rendered = template.render(Context({'models': Models(self.app), 'app': self.app}))
-                with open(to_path, 'w') as f:
+                with open(to_path_py_ext, 'w') as f:
                     f.write(rendered)
